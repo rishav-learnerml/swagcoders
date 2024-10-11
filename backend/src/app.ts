@@ -6,10 +6,10 @@ const app = express();
 
 const PORT = process.env.DEV_PORT;
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello");
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log(`server listening at port ${PORT}`);
 });
