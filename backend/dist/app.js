@@ -15,9 +15,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = require("./config/db");
+const validations_1 = require("./config/validations");
+const user_1 = require("./models/user");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+app.use(express_1.default.json());
 const PORT = process.env.DEV_PORT;
+app.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = req.body;
+    const { success, error } = validations_1.userSchema.safeParse(userData);
+    if (!success) {
+        res.status(403).json({ message: "Invalid Inputs!", error });
+        return;
+    }
+    try {
+        const user = new user_1.User(userData);
+        yield user.save();
+        console.log("Inserted User Succesfully!", res);
+        res.json({ message: "Inserted User Succesfully!" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Something went Wrong!", error });
+        return;
+    }
+}));
+app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield user_1.User.find();
+    res.json({ users });
+}));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectToDb)();
