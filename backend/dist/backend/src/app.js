@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = require("./config/db");
-const validations_1 = require("./config/validations");
+const validations_1 = require("../../shared/validations");
 const user_1 = require("./models/user");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -35,7 +35,9 @@ app.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.json({ message: "Inserted User Succesfully!" });
     }
     catch (error) {
-        res.status(500).json({ message: "Something went Wrong!", error });
+        res
+            .status(500)
+            .json({ message: "Something went Wrong while saving user!", error });
         return;
     }
 }));

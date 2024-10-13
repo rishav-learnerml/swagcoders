@@ -4,7 +4,10 @@
   "description": "World's largest coding community",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -b shared && tsc -b backend && tsc -b frontend",
+    "start": "npm run build && node backend/dist/app.js",
+    "server": "cd backend && tsc -b && node dist/backend/src/app.js"
   },
   "keywords": [],
   "author": "",
