@@ -8,8 +8,8 @@ const zod_1 = __importDefault(require("zod"));
 exports.userSchema = zod_1.default.object({
     firstName: zod_1.default.string(),
     lastName: zod_1.default.string(),
-    emailId: zod_1.default.string().email(), // Added validation for a valid email format
-    password: zod_1.default.string().min(6), // Added minimum length for password
-    age: zod_1.default.number().int().min(0), // Ensures age is a non-negative integer
-    gender: zod_1.default.enum(["male", "female", "other"]), // Restricted to specific values
+    emailId: zod_1.default.string().email(),
+    password: zod_1.default.string().min(6),
+    age: zod_1.default.number().int().min(0),
+    gender: zod_1.default.enum(["male", "female", "other"]),
 });

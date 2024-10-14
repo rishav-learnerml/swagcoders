@@ -36,6 +36,17 @@ app.get("/users", async (req, res) => {
   res.json({ users });
 });
 
+app.delete("/user", async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.body.id);
+    res.json({ message: "User deleted succesfully!" });
+    console.log("User deleted succesfully!");
+  } catch (error) {
+    res.status(500).json({ message: "error deleting user!" });
+    console.error("error deleting user!");
+  }
+});
+
 const main = async () => {
   try {
     await connectToDb();

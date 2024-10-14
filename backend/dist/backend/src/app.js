@@ -45,6 +45,17 @@ app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_1.User.find();
     res.json({ users });
 }));
+app.delete("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield user_1.User.findByIdAndDelete(req.body.id);
+        res.json({ message: "User deleted succesfully!" });
+        console.log("User deleted succesfully!");
+    }
+    catch (error) {
+        res.status(500).json({ message: "error deleting user!" });
+        console.error("error deleting user!");
+    }
+}));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectToDb)();
