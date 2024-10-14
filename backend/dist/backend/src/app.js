@@ -56,6 +56,19 @@ app.delete("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         console.error("error deleting user!");
     }
 }));
+app.patch("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = req.body;
+        const id = req.body.id;
+        yield user_1.User.findByIdAndUpdate({ _id: id }, data);
+        res.json({ message: "User updated succesfully!" });
+        console.log("User updated succesfully!");
+    }
+    catch (error) {
+        res.status(500).json({ message: "error updated user!" });
+        console.error("error updated user!");
+    }
+}));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectToDb)();
