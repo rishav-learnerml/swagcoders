@@ -1,12 +1,30 @@
 import z from "zod";
 
+// Full user schema
 export const userSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string().min(4),
+  lastName: z.string().optional(),
   emailId: z.string().email(),
   password: z.string().min(6),
-  age: z.number().int().min(0),
-  gender: z.enum(["male", "female", "other"]),
+  age: z.number().int().min(18).optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
+  photoUrl: z.string().url(),
+  skills: z.array(z.string()),
+  about: z.string().min(6),
 });
 
+// Schema for updating the user
+export const userUpdateSchema = z
+  .object({
+    firstName: z.string().min(4).optional(), // Optional for updates
+    lastName: z.string().optional(),
+    password: z.string().min(6).optional(), // Optional for updates
+    photoUrl: z.string().optional(),
+    about: z.string().min(6).optional(),
+    skills: z.array(z.string()).max(6).describe("At max 6 skills allowed!").optional(),
+  })
+  .strict(); // Ensures only defined fields can be updated
+
+// Type inference
 export type UserType = z.infer<typeof userSchema>;
+export type UserUpdateType = z.infer<typeof userUpdateSchema>;

@@ -1,7 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectToDb } from "./config/db";
-import { userSchema, UserType } from "../../shared/validations";
+import {
+  userSchema,
+  UserType,
+  userUpdateSchema,
+} from "../../shared/validations";
 import { User } from "./models/user";
 
 dotenv.config();
@@ -47,15 +51,21 @@ app.delete("/user", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
+app.patch("/user/:id", async (req, res) => {
   try {
     const data = req.body;
-    const id = req.body.id;
-    await User.findByIdAndUpdate({ _id: id }, data);
+    const id = req.params.id;
+    const { success, error } = userUpdateSchema.safeParse(data);
+    if (!success) {
+      res.status(500).json({ message: "error updated user!", error });
+      console.error("error updated user!", error);
+      return;
+    }
+    await User.findByIdAndUpdate({ _id: id }, data, { runValidators: true });
     res.json({ message: "User updated succesfully!" });
     console.log("User updated succesfully!");
   } catch (error) {
-    res.status(500).json({ message: "error updated user!" });
+    res.status(500).json({ message: "error updated user!", error });
     console.error("error updated user!");
   }
 });

@@ -56,16 +56,22 @@ app.delete("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         console.error("error deleting user!");
     }
 }));
-app.patch("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.patch("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
-        const id = req.body.id;
-        yield user_1.User.findByIdAndUpdate({ _id: id }, data);
+        const id = req.params.id;
+        const { success, error } = validations_1.userUpdateSchema.safeParse(data);
+        if (!success) {
+            res.status(500).json({ message: "error updated user!", error });
+            console.error("error updated user!", error);
+            return;
+        }
+        yield user_1.User.findByIdAndUpdate({ _id: id }, data, { runValidators: true });
         res.json({ message: "User updated succesfully!" });
         console.log("User updated succesfully!");
     }
     catch (error) {
-        res.status(500).json({ message: "error updated user!" });
+        res.status(500).json({ message: "error updated user!", error });
         console.error("error updated user!");
     }
 }));
