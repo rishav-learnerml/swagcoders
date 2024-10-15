@@ -25,6 +25,12 @@ export const userUpdateSchema = z
   })
   .strict(); // Ensures only defined fields can be updated
 
+  export const userLoginSchema = z.object({
+    emailId: z.string().email(),
+    password: z.string().min(6)
+  })
+
 // Type inference
 export type UserType = z.infer<typeof userSchema>;
 export type UserUpdateType = z.infer<typeof userUpdateSchema>;
+export type userLoginType = z.infer<typeof userLoginSchema>;

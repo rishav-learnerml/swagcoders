@@ -17,6 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = require("./config/db");
 const validations_1 = require("../../shared/validations");
 const user_1 = require("./models/user");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -29,6 +30,9 @@ app.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return;
     }
     try {
+        const { password } = userData;
+        const hashedPassword = bcryptjs_1.default.hash(password, 10);
+        userData.password = hashedPassword;
         const user = new user_1.User(userData);
         yield user.save();
         console.log("Inserted User Succesfully!", res);
@@ -39,6 +43,34 @@ app.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             .status(500)
             .json({ message: "Something went Wrong while saving user!", error });
         return;
+    }
+}));
+app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = req.body;
+        const { error, success } = validations_1.userLoginSchema.safeParse(data);
+        if (!success) {
+            res.status(401).json({ message: "Invalid Inputs!", error });
+            return;
+        }
+        //validate password
+        const { emailId, password } = data;
+        const user = yield user_1.User.findOne({ emailId });
+        if (!user) {
+            res
+                .status(404)
+                .json({ message: "Invalid email or user does not exists!", error });
+            return;
+        }
+        const isPasswordValid = yield bcryptjs_1.default.compare(password, user.password);
+        if (!isPasswordValid) {
+            res.status(400).json({ message: "Invalid password!", error });
+            return;
+        }
+        res.json({ message: "Logged in succesfully!" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Something went wrong!" });
     }
 }));
 app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
