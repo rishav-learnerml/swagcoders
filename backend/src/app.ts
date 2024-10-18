@@ -8,12 +8,16 @@ import {
 } from "../../shared/validations";
 import { User } from "./models/user";
 import bcrypt from "bcryptjs";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.DEV_PORT;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 app.post("/signup", async (req, res) => {
   const userData = req.body;
@@ -30,6 +34,9 @@ app.post("/signup", async (req, res) => {
     const user = new User(userData);
     await user.save();
     console.log("Inserted User Succesfully!", res);
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+
+    res.cookie("token", token);
     res.json({ message: "Inserted User Succesfully!" });
   } catch (error) {
     res
@@ -46,7 +53,7 @@ app.post("/login", async (req, res) => {
     res.status(401).json({ message: "Invalid Inputs!", error });
     return;
   }
-  
+
   try {
     //validate password
     const { emailId, password } = data;
@@ -61,12 +68,30 @@ app.post("/login", async (req, res) => {
       res.status(400).json({ message: "Invalid credentials!", error });
       return;
     }
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+
+    res.cookie("token", token);
+
     res.json({ message: "Logged in succesfully!" });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong!" });
   }
 });
 
+app.get("/profile", async (req, res) => {
+  try {
+    const { token } = req.cookies;
+    const decodedValue: any = jwt.verify(token, JWT_SECRET);
+    const userData = await User.findById(decodedValue._id);
+
+    if (!userData) {
+      throw new Error("User doesn't exists");
+    }
+    res.json({ userData });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid Session!" });
+  }
+});
 app.get("/users", async (req, res) => {
   const users = await User.find();
   res.json({ users });
