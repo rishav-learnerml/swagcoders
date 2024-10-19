@@ -15,10 +15,11 @@ app.use(cookieParser());
 const PORT = process.env.DEV_PORT;
 
 //routes
-app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/requests", requestRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/profile", profileRouter);
+app.use("/api/v1/requests", requestRouter);
 
+//main function
 const main = async () => {
   try {
     await connectToDb();

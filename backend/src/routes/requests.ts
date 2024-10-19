@@ -9,7 +9,7 @@ requestRouter.get("/", authChecker, async (req: RequestWithCookieType, res) => {
 
   console.log("sending a connection request...");
 
-  res.send(user.firstName + "sent the Connexction request");
+  res.send(user.firstName + " sent the Connexction request");
 });
 
 export default requestRouter;

@@ -13,9 +13,9 @@ exports.userSchema = zod_1.default.object({
     password: zod_1.default.string().min(6),
     age: zod_1.default.number().int().min(18).optional(),
     gender: zod_1.default.enum(["male", "female", "other"]).optional(),
-    photoUrl: zod_1.default.string().url(),
-    skills: zod_1.default.array(zod_1.default.string()),
-    about: zod_1.default.string().min(6),
+    photoUrl: zod_1.default.string().url().optional(),
+    skills: zod_1.default.array(zod_1.default.string()).optional(),
+    about: zod_1.default.string().min(6).optional(),
 });
 // Schema for updating the user
 exports.userUpdateSchema = zod_1.default

@@ -8,9 +8,9 @@ export const userSchema = z.object({
   password: z.string().min(6),
   age: z.number().int().min(18).optional(),
   gender: z.enum(["male", "female", "other"]).optional(),
-  photoUrl: z.string().url(),
-  skills: z.array(z.string()),
-  about: z.string().min(6),
+  photoUrl: z.string().url().optional(),
+  skills: z.array(z.string()).optional(),
+  about: z.string().min(6).optional(),
 });
 
 // Schema for updating the user

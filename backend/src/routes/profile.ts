@@ -9,7 +9,7 @@ profileRouter.get("/", authChecker, async (req: RequestWithCookieType, res) => {
     const user = req.user;
     res.json({ user });
   } catch (error) {
-    res.status(400).json({ message: "Invalid Session!" });
+    res.status(400).json({ message: "Invalid Session!" , error});
   }
 });
 
