@@ -1,131 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectToDb } from "./config/db";
-import {
-  userLoginSchema,
-  userSchema,
-  userUpdateSchema,
-} from "../../shared/validations";
-import { User } from "./models/user";
-import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
+import authRouter from "./routes/auth";
+import profileRouter from "./routes/profile";
+import requestRouter from "./routes/requests";
 
 dotenv.config();
 const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
 
 const PORT = process.env.DEV_PORT;
-const JWT_SECRET = process.env.JWT_SECRET as string;
 
-app.post("/signup", async (req, res) => {
-  const userData = req.body;
-  const { success, error } = userSchema.safeParse(userData);
-  if (!success) {
-    res.status(403).json({ message: "Invalid Inputs!", error });
-    return;
-  }
-
-  try {
-    const { password } = userData;
-    const hashedPassword = bcrypt.hash(password, 10);
-    userData.password = hashedPassword;
-    const user = new User(userData);
-    await user.save();
-    console.log("Inserted User Succesfully!", res);
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
-
-    res.cookie("token", token);
-    res.json({ message: "Inserted User Succesfully!" });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Something went Wrong while saving user!", error });
-    return;
-  }
-});
-
-app.post("/login", async (req, res) => {
-  const data = req.body;
-  const { error, success } = userLoginSchema.safeParse(data);
-  if (!success) {
-    res.status(401).json({ message: "Invalid Inputs!", error });
-    return;
-  }
-
-  try {
-    //validate password
-    const { emailId, password } = data;
-    const user = await User.findOne({ emailId });
-    if (!user) {
-      res.status(404).json({ message: "Invalid credentials!", error });
-      return;
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      res.status(400).json({ message: "Invalid credentials!", error });
-      return;
-    }
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
-
-    res.cookie("token", token);
-
-    res.json({ message: "Logged in succesfully!" });
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong!" });
-  }
-});
-
-app.get("/profile", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    const decodedValue: any = jwt.verify(token, JWT_SECRET);
-    const userData = await User.findById(decodedValue._id);
-
-    if (!userData) {
-      throw new Error("User doesn't exists");
-    }
-    res.json({ userData });
-  } catch (error) {
-    res.status(400).json({ message: "Invalid Session!" });
-  }
-});
-app.get("/users", async (req, res) => {
-  const users = await User.find();
-  res.json({ users });
-});
-
-app.delete("/user", async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.body.id);
-    res.json({ message: "User deleted succesfully!" });
-    console.log("User deleted succesfully!");
-  } catch (error) {
-    res.status(500).json({ message: "error deleting user!" });
-    console.error("error deleting user!");
-  }
-});
-
-app.patch("/user/:id", async (req, res) => {
-  try {
-    const data = req.body;
-    const id = req.params.id;
-    const { success, error } = userUpdateSchema.safeParse(data);
-    if (!success) {
-      res.status(500).json({ message: "error updated user!", error });
-      console.error("error updated user!", error);
-      return;
-    }
-    await User.findByIdAndUpdate({ _id: id }, data, { runValidators: true });
-    res.json({ message: "User updated succesfully!" });
-    console.log("User updated succesfully!");
-  } catch (error) {
-    res.status(500).json({ message: "error updated user!", error });
-    console.error("error updated user!");
-  }
-});
+//routes
+app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
+app.use("/requests", requestRouter);
 
 const main = async () => {
   try {
