@@ -25,10 +25,16 @@ exports.userUpdateSchema = zod_1.default
     password: zod_1.default.string().min(6).optional(), // Optional for updates
     photoUrl: zod_1.default.string().optional(),
     about: zod_1.default.string().min(6).optional(),
-    skills: zod_1.default.array(zod_1.default.string()).max(6).describe("At max 6 skills allowed!").optional(),
+    gender: zod_1.default.enum(["male", "female", "others"]).optional(),
+    age: zod_1.default.number().min(18).optional(),
+    skills: zod_1.default
+        .array(zod_1.default.string())
+        .max(6)
+        .describe("At max 6 skills allowed!")
+        .optional(),
 })
     .strict(); // Ensures only defined fields can be updated
 exports.userLoginSchema = zod_1.default.object({
     emailId: zod_1.default.string().email(),
-    password: zod_1.default.string().min(6)
+    password: zod_1.default.string().min(6),
 });

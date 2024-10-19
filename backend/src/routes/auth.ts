@@ -78,11 +78,11 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (req, res) => {
-    //modify the token and expire it right now
+  //modify the token and expire it right now
   res.cookie("token", null, {
     expires: new Date(Date.now()),
   });
-  res.send();
+  res.send({ message: "Logged out succesfully!" });
 });
 
 export default authRouter;

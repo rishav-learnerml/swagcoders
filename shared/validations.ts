@@ -21,14 +21,20 @@ export const userUpdateSchema = z
     password: z.string().min(6).optional(), // Optional for updates
     photoUrl: z.string().optional(),
     about: z.string().min(6).optional(),
-    skills: z.array(z.string()).max(6).describe("At max 6 skills allowed!").optional(),
+    gender: z.enum(["male", "female", "others"]).optional(),
+    age: z.number().min(18).optional(),
+    skills: z
+      .array(z.string())
+      .max(6)
+      .describe("At max 6 skills allowed!")
+      .optional(),
   })
   .strict(); // Ensures only defined fields can be updated
 
-  export const userLoginSchema = z.object({
-    emailId: z.string().email(),
-    password: z.string().min(6)
-  })
+export const userLoginSchema = z.object({
+  emailId: z.string().email(),
+  password: z.string().min(6),
+});
 
 // Type inference
 export type UserType = z.infer<typeof userSchema>;
