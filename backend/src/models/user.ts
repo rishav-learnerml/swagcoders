@@ -30,6 +30,10 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
+      enum: {
+        values: ["male", "female", "other"],
+        message: `{VALUE} is not a valid gender type`,
+      },
       validate(value: string) {
         if (!["male", "female", "other"].includes(value)) {
           throw new Error("Gender is invalid!");

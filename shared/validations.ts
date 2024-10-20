@@ -36,7 +36,14 @@ export const userLoginSchema = z.object({
   password: z.string().min(6),
 });
 
+export const connectionRequestSchema = z.object({
+  fromUser: z.string().optional(),
+  toUser: z.string().optional(),
+  status: z.enum(["ignored", "interested"]),
+});
+
 // Type inference
 export type UserType = z.infer<typeof userSchema>;
 export type UserUpdateType = z.infer<typeof userUpdateSchema>;
 export type userLoginType = z.infer<typeof userLoginSchema>;
+export type connectionRequesType = z.infer<typeof connectionRequestSchema>;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userLoginSchema = exports.userUpdateSchema = exports.userSchema = void 0;
+exports.connectionRequestSchema = exports.userLoginSchema = exports.userUpdateSchema = exports.userSchema = void 0;
 const zod_1 = __importDefault(require("zod"));
 // Full user schema
 exports.userSchema = zod_1.default.object({
@@ -37,4 +37,9 @@ exports.userUpdateSchema = zod_1.default
 exports.userLoginSchema = zod_1.default.object({
     emailId: zod_1.default.string().email(),
     password: zod_1.default.string().min(6),
+});
+exports.connectionRequestSchema = zod_1.default.object({
+    fromUser: zod_1.default.string().optional(),
+    toUser: zod_1.default.string().optional(),
+    status: zod_1.default.enum(["ignored", "interested"]),
 });
