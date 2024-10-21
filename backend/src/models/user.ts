@@ -16,7 +16,7 @@ const userSchema = new Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, //automatically creates index for uniques for faster db queries
       trim: true,
       lowercase: true,
     },

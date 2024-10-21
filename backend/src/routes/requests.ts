@@ -40,16 +40,6 @@ requestRouter.get(
         return;
       }
 
-      //check if the person is sending connection request to himself/herself
-
-      if (fromUserId === toUserId) {
-        res.status(400).json({
-          message: "You can't send connection request to yourself!",
-          error,
-        });
-        return;
-      }
-
       //check if it's an existing connection request or if it is a pending connection request
 
       const existingConnectionRequest = await ConnectionRequest.findOne({
@@ -71,7 +61,12 @@ requestRouter.get(
       console.log("Connection request sent succesfully!");
 
       res.json({
-        message: user.firstName + " sent the Connexction request",
+        message:
+          user.firstName +
+          " - " +
+          status +
+          " connecting with " +
+          toUser.firstName,
         data,
       });
     } catch (error) {
