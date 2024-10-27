@@ -78,4 +78,30 @@ requestRouter.get(
   }
 );
 
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  authChecker,
+  async (req: RequestWithCookieType, res) => {
+    const { status, requestId } = req.params;
+    try {
+      const loggedInUser = req.user;
+      //status should be interested
+      const allowedStatus = ["accepted", "rejected"];
+      if (!allowedStatus.includes(status)) {
+        res.status(400).json({ message: "Status is not allowed!" });
+        return;
+      }
+
+      //request id has to be valid
+      //is logged in user the same who was the connection request sent to --> toUserID
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id:requestId,
+        toUserId:loggedInUser._id
+      })
+    } catch (error) {
+      res.status(400).json({ message: "ERROR: " + error });
+    }
+  }
+);
+
 export default requestRouter;

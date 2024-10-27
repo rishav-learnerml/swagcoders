@@ -17,7 +17,7 @@ const userSchema = new mongoose_1.Schema({
     emailId: {
         type: String,
         required: true,
-        unique: true,
+        unique: true, //automatically creates index for uniques for faster db queries
         trim: true,
         lowercase: true,
     },
