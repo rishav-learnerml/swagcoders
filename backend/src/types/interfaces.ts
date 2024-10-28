@@ -5,4 +5,5 @@ export interface RequestWithCookieType extends Request {
   user?: any;
 }
 
+
 export default RequestWithCookieType;

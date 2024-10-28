@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth";
 import profileRouter from "./routes/profile";
 import requestRouter from "./routes/requests";
+import userRouter from "./routes/user";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ const PORT = process.env.DEV_PORT;
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/profile", profileRouter);
 app.use("/api/v1/requests", requestRouter);
+app.use("/api/v1/user", userRouter);
 
 //main function
 const main = async () => {

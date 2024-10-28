@@ -4,6 +4,7 @@ import RequestWithCookieType from "../types/interfaces";
 import { ConnectionRequest } from "../models/connectionRequest";
 import { User } from "../models/user";
 import { connectionRequestSchema } from "../../../shared/validations";
+import { Status } from "../types/enums";
 
 const requestRouter = express.Router();
 
@@ -79,7 +80,7 @@ requestRouter.get(
 );
 
 requestRouter.post(
-  "/request/review/:status/:requestId",
+  "/review/:status/:requestId",
   authChecker,
   async (req: RequestWithCookieType, res) => {
     const { status, requestId } = req.params;
@@ -95,11 +96,21 @@ requestRouter.post(
       //request id has to be valid
       //is logged in user the same who was the connection request sent to --> toUserID
       const connectionRequest = await ConnectionRequest.findOne({
-        _id:requestId,
-        toUserId:loggedInUser._id
-      })
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+
+      if (!connectionRequest) {
+        res.sendStatus(404).json({ message: "Connection Request not Found!" });
+        return;
+      }
+      connectionRequest.status = status as Status;
+      const data = await connectionRequest.save();
+
+      res.json({ message: "Connection request " + status, data });
     } catch (error) {
-      res.status(400).json({ message: "ERROR: " + error });
+      res.status(400).json({ message: "Something went wrong!", error });
     }
   }
 );
