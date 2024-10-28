@@ -4,11 +4,13 @@ const connectionRequestSchema = new Schema(
   {
     fromUserId: {
       type: Schema.Types.ObjectId,
+      ref: "User", //referencing the corresponding user
       required: true,
     },
 
     toUserId: {
       type: Schema.Types.ObjectId,
+      ref: "User", //referencing the corresponding user
       required: true,
     },
 
