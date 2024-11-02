@@ -73,6 +73,11 @@ userRouter.get(
   async (req: RequestWithCookieType, res) => {
     try {
       const loggedInUser = req.user;
+      const page = parseInt(req.query.page as string) || 1;
+      let limit = parseInt(req.query.limit as string) || 10;
+      limit = limit > 50 ? 50 : limit;
+      const skip = (page - 1) * limit;
+
       const connections = await ConnectionRequest.find({
         $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
       }).select("fromUserId toUserId");
@@ -89,7 +94,10 @@ userRouter.get(
           { _id: { $nin: Array.from(hideFromFeed) } },
           { _id: { $ne: loggedInUser._id } },
         ],
-      }).select(USER_SAFE_DATA);
+      })
+        .select(USER_SAFE_DATA)
+        .skip(skip)
+        .limit(limit);
 
       res.json({ message: "Success", users });
     } catch (error) {
