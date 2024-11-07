@@ -30,8 +30,8 @@ const Login = () => {
       );
       dispatch(addUser(res.data));
       return navigate("/");
-    } catch (err:{response:{data:UserType}}|any) {
-      setError(err?.response?.data || "Something went wrong");
+    } catch (err: { response: { data: UserType } } | any) {
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -42,9 +42,9 @@ const Login = () => {
         { firstName, lastName, emailId, password },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data))
+      dispatch(addUser(res.data));
       return navigate("/profile");
-    } catch (err:{response:{data:UserType}}|any) {
+    } catch (err: { response: { data: UserType } } | any) {
       setError(err?.response?.data || "Something went wrong");
     }
   };
@@ -107,7 +107,7 @@ const Login = () => {
               />
             </label>
           </div>
-          <p className="text-red-500" >{error}</p>
+          <p className="text-red-500 text-center">{error}</p>
           <div className="card-actions justify-center m-2">
             <button
               className="btn btn-primary"
@@ -119,7 +119,10 @@ const Login = () => {
 
           <p
             className="m-auto cursor-pointer py-2"
-            onClick={() => setIsLoginForm((value) => !value)}
+            onClick={() => {
+              setIsLoginForm((value) => !value);
+              setError("")
+            }}
           >
             {isLoginForm
               ? "New User? Signup Here"

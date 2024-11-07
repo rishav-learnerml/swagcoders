@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Body />}>
             <Route index element={<Feed />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
           <Route
             path="/login"
@@ -24,7 +25,6 @@ function App() {
               </>
             }
           />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </Provider>

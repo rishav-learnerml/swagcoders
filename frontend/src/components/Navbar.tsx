@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/index";
 import { UserType } from "../../../shared/validations";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../store/userSlice";
 
 const Navbar = () => {
   const userData: null | Record<"user", UserType> = useSelector(
     (store: RootState) => store.user
   );
+  const dispatch = useDispatch()
+  const handleLogout = async () => {
+    try {
+      await axios.get(BASE_URL + "/auth/logout",{withCredentials:true});
+      dispatch(removeUser())
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
@@ -16,7 +28,10 @@ const Navbar = () => {
         </span>
         <a className="btn btn-ghost text-xl">Swag Coder</a>
       </div>
-      <div>Welcome,&nbsp;<span className="text-white">{userData?.user?.firstName}</span></div>
+      <div>
+        Welcome,&nbsp;
+        <span className="text-white">{userData?.user?.firstName}</span>
+      </div>
       <div className="flex-none">
         <div className="dropdown dropdown-end mx-5">
           <div
@@ -25,10 +40,7 @@ const Navbar = () => {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src={userData?.user?.photoUrl}
-              />
+              <img alt="user-avatar" src={userData?.user?.photoUrl} />
             </div>
           </div>
           <ul
@@ -47,7 +59,7 @@ const Navbar = () => {
                 <span className="badge">Coming Soon</span>
               </a>
             </li>
-            <li>
+            <li onClick={handleLogout}>
               <Link to={"/login"}>Logout</Link>
             </li>
           </ul>

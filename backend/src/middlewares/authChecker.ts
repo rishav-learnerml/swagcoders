@@ -10,7 +10,10 @@ const authChecker = async (
 ) => {
   try {
     const { token } = req.cookies;
-    if (!token) throw new Error("Auth Failed! Please Log in Again!");
+    if (!token) {
+      res.status(401).json({ message: "Auth Failed! Please Log in Again!" });
+      return;
+    }
     const { _id }: any = jwt.decode(token);
     if (!_id) throw new Error("Invalid Token!");
     const user = await User.findById(_id);

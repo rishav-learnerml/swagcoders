@@ -77,7 +77,7 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.post("/logout", async (req, res) => {
+authRouter.get("/logout", async (req, res) => {
   //modify the token and expire it right now
   res.cookie("token", null, {
     expires: new Date(Date.now()),
