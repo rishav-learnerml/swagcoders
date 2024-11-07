@@ -32,7 +32,7 @@ authRouter.post("/signup", async (req, res) => {
 
     res.cookie("token", token);
 
-    res.json({ message: "Inserted User Successfully!" });
+    res.json({ message: "Signed Up Successfully!",user });
   } catch (error) {
     // Log the error for debugging purposes
     console.error("Error while saving user:", error);
@@ -71,7 +71,7 @@ authRouter.post("/login", async (req, res) => {
 
     res.cookie("token", token);
 
-    res.json({ message: "Logged in succesfully!" });
+    res.json({ message: "Logged in succesfully!",user });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong!" });
   }
