@@ -18,11 +18,12 @@ function App() {
           </Route>
           <Route
             path="/login"
-            element={
-              <>
+            element={<>
+              <div className="h-[90vh] flex justify-center items-center">
                 <Login />
+              </div>
                 <Footer />
-              </>
+            </>
             }
           />
         </Routes>

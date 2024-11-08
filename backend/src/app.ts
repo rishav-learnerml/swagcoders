@@ -10,11 +10,21 @@ import userRouter from "./routes/user";
 
 dotenv.config();
 const app = express();
+// Define your allowed origins
+const allowedOrigins = ["http://localhost:5173"];
 
-app.use(cors({
-  origin:"http://localhost:5173",
-  credentials:true
-}))
+app.use(
+  cors({
+    origin: function (origin:any, callback) {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow credentials
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());

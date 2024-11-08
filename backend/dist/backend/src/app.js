@@ -23,9 +23,18 @@ const requests_1 = __importDefault(require("./routes/requests"));
 const user_1 = __importDefault(require("./routes/user"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+// Define your allowed origins
+const allowedOrigins = ["http://localhost:5173"];
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
-    credentials: true
+    origin: function (origin, callback) {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true, // Allow credentials
 }));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());

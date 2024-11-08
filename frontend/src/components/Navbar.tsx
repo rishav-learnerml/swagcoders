@@ -22,12 +22,12 @@ const Navbar = () => {
   };
   return (
     <div className="navbar bg-base-300">
-      <div className="flex-1">
+      <Link to={'/'} className="flex-1">
         <span className="w-10">
           <img src={logo} alt="logo" />
         </span>
         <a className="btn btn-ghost text-xl">Swag Coder</a>
-      </div>
+      </Link>
       <div>
         Welcome,&nbsp;
         <span className="text-white">{userData?.user?.firstName}</span>
