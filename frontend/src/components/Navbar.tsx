@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/index";
-import { UserType } from "../../../shared/validations";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../store/userSlice";
 
 const Navbar = () => {
-  const userData: null | Record<"user", UserType> = useSelector(
+  const userData: any = useSelector(
     (store: RootState) => store.user
   );
   const dispatch = useDispatch()
@@ -21,12 +21,12 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="navbar bg-base-300">
+    <div className="navbar bg-base-300 sticky top-0 z-50">
       <Link to={'/'} className="flex-1">
         <span className="w-10">
           <img src={logo} alt="logo" />
         </span>
-        <a className="btn btn-ghost text-xl">Swag Coder</a>
+        <a className="btn btn-ghost text-xl">Swag Coder Community</a>
       </Link>
       <div>
         Welcome,&nbsp;
@@ -51,6 +51,16 @@ const Navbar = () => {
               <Link className="justify-between" to={"/profile"}>
                 Profile
                 <span className="badge">New</span>
+              </Link>
+            </li>
+            <li>
+              <Link className="justify-between" to={"/connections"}>
+                Connections
+              </Link>
+            </li>
+            <li>
+              <Link className="justify-between" to={"/requests"}>
+                Requests
               </Link>
             </li>
             <li>

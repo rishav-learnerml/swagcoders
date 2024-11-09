@@ -30,9 +30,9 @@ authRouter.post("/signup", async (req, res) => {
 
     const token = jwt.sign({ _id: user._id }, JWT_SECRET);
 
-    res.cookie("token", token);
+    res.cookie("token", token, { expires: new Date(Date.now() + 2 * 3600000) });
 
-    res.json({ message: "Signed Up Successfully!",user });
+    res.json({ message: "Signed Up Successfully!", user });
   } catch (error) {
     // Log the error for debugging purposes
     console.error("Error while saving user:", error);
@@ -69,9 +69,9 @@ authRouter.post("/login", async (req, res) => {
     }
     const token = jwt.sign({ _id: user._id }, JWT_SECRET);
 
-    res.cookie("token", token);
+    res.cookie("token", token, { expires: new Date(Date.now() + 2 * 3600000) });
 
-    res.json({ message: "Logged in succesfully!",user });
+    res.json({ message: "Logged in succesfully!", user });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong!" });
   }

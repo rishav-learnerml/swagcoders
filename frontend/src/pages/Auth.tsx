@@ -9,8 +9,8 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("crishav01@gmail.com");
-  const [password, setPassword] = useState("@Passw0rd#");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -45,7 +45,7 @@ const Login = () => {
       dispatch(addUser(res.data));
       return navigate("/profile");
     } catch (err: { response: { data: UserType } } | any) {
-      setError(err?.response?.data || "Something went wrong");
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 

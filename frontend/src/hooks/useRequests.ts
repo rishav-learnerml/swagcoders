@@ -3,23 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { addFeed } from "../store/feedSlice";
+import { addRequests, removeRequests } from "../store/requestSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const useFeed = () => {
-  const feed = useSelector((store: RootState) => store.feed);
+const useRequests = () => {
+  const requests = useSelector((store: RootState) => store.requests);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const fetchFeed = async () => {
+  const fetchRequests = async () => {
     try {
-      const response = await axios.get(BASE_URL + "/user/feed", {
+      const response = await axios.get(BASE_URL + "/user/requests/received", {
         withCredentials: true,
       });
-      dispatch(addFeed(response.data.users));
+      dispatch(addRequests(response.data.data));
     } catch (error: any) {
       if (error.response?.status === 401) {
+        dispatch(removeRequests());
         navigate("/login");
       }
       console.log(error);
@@ -27,10 +28,10 @@ const useFeed = () => {
   };
 
   useEffect(() => {
-    fetchFeed();
+    fetchRequests();
   }, []);
 
-  return feed;
+  return requests;
 };
 
-export default useFeed;
+export default useRequests;

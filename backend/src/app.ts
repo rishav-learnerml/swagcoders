@@ -23,6 +23,7 @@ app.use(
       }
     },
     credentials: true, // Allow credentials
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Add PATCH here
   })
 );
 
